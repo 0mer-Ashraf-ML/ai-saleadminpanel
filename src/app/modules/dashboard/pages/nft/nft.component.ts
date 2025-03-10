@@ -5,6 +5,7 @@ import { NftDualCardComponent } from '../../components/nft/nft-dual-card/nft-dua
 import { NftHeaderComponent } from '../../components/nft/nft-header/nft-header.component';
 import { NftSingleCardComponent } from '../../components/nft/nft-single-card/nft-single-card.component';
 import { Nft } from '../../models/nft';
+import { ChartComponent } from '../../components/nft/chart/chart.component';
 
 @Component({
   selector: 'app-nft',
@@ -12,6 +13,7 @@ import { Nft } from '../../models/nft';
   imports: [
     NftHeaderComponent,
     NftDualCardComponent,
+    ChartComponent
   ],
 })
 export class NftComponent implements OnInit {

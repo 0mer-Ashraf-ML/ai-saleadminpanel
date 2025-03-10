@@ -17,13 +17,10 @@
     <!-- <div nft-single-card [nft]="nft[1]"></div> -->
     <!-- end Single Card -->
     <!-- Single Card -->
-    <div nft-chart-card class="col-span-4"></div>
-    <!-- <app-chart [chartData]="{
-      parameter1: [100, 200, 300, 400, 500, 600, 700],
-      parameter2: [50, 150, 250, 350, 450, 550, 650]
-    }"></app-chart>
+    <!-- <div nft-chart-card class="col-span-4"></div> -->
 
-    <app-chart [chartData]="{
+
+    <!-- <app-chart [chartData]="{
       parameter1: [500, 600, 700, 800, 900, 1000, 1100],
       parameter2: [400, 500, 600, 700, 800, 900, 1000]
     }"></app-chart> -->
@@ -31,4 +28,16 @@
     <!-- Auctions Table -->
     <!-- <div nft-auctions-table class="md:col-span-2 xl:col-span-3"></div> -->
   </div>
+
+  <h2 class="text-foreground text-2xl font-semibold my-4">Growth Trend</h2>
+  <h3 class="text-foreground text-xl font-semibold text-center mb-3">Revenue</h3>
+  <app-chart [chartData]="{
+    parameter1: [100, 200, 300, 400, 500, 600, 700],
+    parameter2: [50, 150, 250, 350, 450, 550, 650]
+  }"></app-chart>
+   <h3 class="text-foreground text-2xl font-semibold text-center mb-3">Users</h3>
+      <app-chart [chartData]="{
+      parameter1: [500, 600, 700, 800, 900, 1000, 1100],
+      parameter2: [400, 500, 600, 700, 800, 900, 1000]
+    }"></app-chart>
 </div>
