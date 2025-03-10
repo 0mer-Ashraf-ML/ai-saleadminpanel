@@ -9,7 +9,7 @@ export class Menu {
         {
           // icon: 'assets/icons/heroicons/outline/chart-pie.svg',
           label: 'Dashboard',
-          route: '/dashboard/nfts',
+          route: '/dashboard/admin',
           // children: [
           //   { label: 'Nfts', route: '/dashboard/nfts' },
           //   // { label: 'Podcast', route: '/dashboard/podcast' },

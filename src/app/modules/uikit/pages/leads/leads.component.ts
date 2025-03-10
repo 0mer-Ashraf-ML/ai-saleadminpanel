@@ -139,7 +139,7 @@ export class LeadsComponent {
       name: 'abc',
       title: 'abc',
       email: 'test@test.com',
-      Phone: '+1234556789',
+      phone: '+1234556789',
       companyKeyword: 'keyword',
     },
     {
@@ -156,7 +156,7 @@ export class LeadsComponent {
       name: 'abc',
       title: 'abc',
       email: 'test@test.com',
-      Phone: '+1234556789',
+      phone: '+1234556789',
       companyKeyword: 'keyword',
     },
     {
@@ -173,7 +173,7 @@ export class LeadsComponent {
       name: 'abc',
       title: 'abc',
       email: 'test@test.com',
-      Phone: '+1234556789',
+      phone: '+1234556789',
       companyKeyword: 'keyword',
     },
     {
@@ -190,7 +190,7 @@ export class LeadsComponent {
       name: 'abc',
       title: 'abc',
       email: 'test@test.com',
-      Phone: '+1234556789',
+      phone: '+1234556789',
       companyKeyword: 'keyword',
     },
     {
@@ -207,7 +207,7 @@ export class LeadsComponent {
       name: 'abc',
       title: 'abc',
       email: 'test@test.com',
-      Phone: '+1234556789',
+      phone: '+1234556789',
       companyKeyword: 'keyword',
     },
     {
@@ -224,7 +224,7 @@ export class LeadsComponent {
       name: 'abc',
       title: 'abc',
       email: 'test@test.com',
-      Phone: '+1234556789',
+      phone: '+1234556789',
       companyKeyword: 'keyword',
     },
     {
@@ -241,7 +241,7 @@ export class LeadsComponent {
       name: 'abc',
       title: 'abc',
       email: 'test@test.com',
-      Phone: '+1234556789',
+      phone: '+1234556789',
       companyKeyword: 'keyword',
     },
     {
@@ -258,7 +258,7 @@ export class LeadsComponent {
       name: 'abc',
       title: 'abc',
       email: 'test@test.com',
-      Phone: '+1234556789',
+      phone: '+1234556789',
       companyKeyword: 'keyword',
     },
     {
@@ -275,7 +275,7 @@ export class LeadsComponent {
       name: 'abc',
       title: 'abc',
       email: 'test@test.com',
-      Phone: '+1234556789',
+      phone: '+1234556789',
       companyKeyword: 'keyword',
     },
     {
@@ -292,7 +292,7 @@ export class LeadsComponent {
       name: 'abc',
       title: 'abc',
       email: 'test@test.com',
-      Phone: '+1234556789',
+      phone: '+1234556789',
       companyKeyword: 'keyword',
     },
     {
@@ -309,7 +309,7 @@ export class LeadsComponent {
       name: 'abc',
       title: 'abc',
       email: 'test@test.com',
-      Phone: '+1234556789',
+      phone: '+1234556789',
       companyKeyword: 'keyword',
     },
     {
@@ -326,24 +326,7 @@ export class LeadsComponent {
       name: 'abc',
       title: 'abc',
       email: 'test@test.com',
-      Phone: '+1234556789',
-      companyKeyword: 'keyword',
-    },
-    {
-      time: '2024-10-12T12:34:56Z',
-      userId: '123',
-      projId: '321',
-      score: '40',
-      country: 'xyz',
-      companyName: 'abc',
-      companyWeb: 'test.com',
-      industry: 'abc',
-      employees: '100',
-      revenue: '$1000',
-      name: 'abc',
-      title: 'abc',
-      email: 'test@test.com',
-      Phone: '+1234556789',
+      phone: '+1234556789',
       companyKeyword: 'keyword',
     },
   ];

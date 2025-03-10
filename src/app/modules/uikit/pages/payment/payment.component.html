@@ -45,14 +45,19 @@
             <td>
               {{ payment.status }}
             </td>
-            <td class="flex justify-center items-center gap-2">
+            <td>
+              <button class="bg-[#22C55E] text-primary-foreground rounded-md px-3 py-2 text-xs font-semibold cusrsor-pointer">
+                View
+              </button>
+            </td>
+            <!-- <td class="flex justify-center items-center gap-2">
               <button class="bg-destructive text-primary-foreground rounded-md px-2 py-1 text-xs font-semibold">
                 Delete
               </button>
               <button class="ml-[3px] bg-white text-gray-700 rounded-md px-2 py-1 text-xs font-semibold">
                 Update
               </button>
-            </td>
+            </td> -->
           </tr>
           
           <tr *ngIf="!dummyData">

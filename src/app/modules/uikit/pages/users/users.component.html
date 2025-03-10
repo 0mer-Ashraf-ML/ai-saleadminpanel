@@ -6,11 +6,11 @@
         <span class="text-foreground">{{users.length}}</span>
       </div>
     </div>
-    <div class="inline-block space-x-4">
+    <!-- <div class="inline-block space-x-4">
       <button class="bg-primary text-primary-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">
         Add User
       </button>
-    </div>
+    </div> -->
   </div>
   
   <div class="border-muted/20 bg-background flex min-w-full flex-col rounded-xl border p-2">
@@ -45,14 +45,19 @@
             <td>
               {{ user.email }}
             </td>
-            <td class="flex justify-center items-center gap-2">
+            <td>
+              <button class="bg-[#22C55E] text-primary-foreground rounded-md px-3 py-2 text-xs font-semibold cusrsor-pointer">
+                View
+              </button>
+            </td>
+            <!-- <td class="flex justify-center items-center gap-2">
               <button class="bg-destructive text-primary-foreground rounded-md px-2 py-1 text-xs font-semibold">
                 Delete
               </button>
               <button class="ml-[3px] bg-muted rounded-md px-2 py-1 text-xs font-semibold text-muted-foreground hover:text-foreground">
                 Update
               </button>
-            </td>
+            </td> -->
           </tr>
           
           <tr *ngIf="!dummyData">
