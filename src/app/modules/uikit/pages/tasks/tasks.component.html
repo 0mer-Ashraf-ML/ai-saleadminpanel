@@ -18,7 +18,7 @@
     <div
       class="scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted grow overflow-x-auto px-5">
       <table
-        class="text-muted-foreground table w-full table-auto border-collapse border-0 text-left align-middle leading-5">
+        class="text-muted-foreground table w-full table-auto border-collapse border-0 align-middle leading-5 text-center">
         <thead class="border-muted/20 text-muted-foreground border text-xs">
           <tr>
             <th class="min-w-[20%]">Time</th>
@@ -41,8 +41,8 @@
             <td>
               {{ task.status }}
             </td>
-            <td class="text-center">
-              <button class="bg-primary text-primary-foreground rounded-md px-2 py-1 text-xs font-semibold">
+            <td class="flex justify-center items-center gap-2">
+              <button class="bg-destructive text-primary-foreground rounded-md px-2 py-1 text-xs font-semibold">
                 Delete
               </button>
               <button class="ml-[3px] bg-white text-gray-700 rounded-md px-2 py-1 text-xs font-semibold">

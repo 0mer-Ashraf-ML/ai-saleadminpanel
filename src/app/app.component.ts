@@ -10,7 +10,7 @@ import { ResponsiveHelperComponent } from './shared/components/responsive-helper
   imports: [RouterOutlet, NgxSonnerToaster],
 })
 export class AppComponent {
-  title = 'Angular Tailwind';
+  title = 'AI Sales Admin Panel';
 
   constructor(public themeService: ThemeService) {}
 }

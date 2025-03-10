@@ -1,1 +1,106 @@
-<p>leads works!</p>
+<div class="mb-4 flex justify-between">
+    <div class="inline-block">
+      <h3 class="text-foreground font-semibold">Leads</h3>
+      <div class="text-muted-foreground space-x-1 text-xs font-medium">
+        <a href="" class="hover:text-primary">All Leads</a>
+        <span class="text-foreground">{{leads.length}}</span>
+      </div>
+    </div>
+    <div class="inline-block space-x-4">
+      <button class="bg-primary text-primary-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">
+        Add Lead
+      </button>
+    </div>
+  </div>
+  
+  <div class="border-muted/20 bg-background flex min-w-full flex-col rounded-xl border p-2">
+    <!-- <app-table-action></app-table-action> -->
+    <div
+      class="scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted grow overflow-x-auto px-5">
+      <table
+        class="text-muted-foreground table w-full table-auto border-collapse border-0 align-middle leading-5 text-center">
+        <thead class="border-muted/20 text-muted-foreground border text-xs">
+          <tr>
+            <th class="min-w-[16%]">Time</th>
+            <th class="min-w-[16%]">Project ID</th>
+            <th class="min-w-[16%]">User ID</th>
+            <th class="min-w-[16%]">Leads Score</th>
+            <th class="min-w-[16%]">Country</th>
+            <th class="min-w-[16%]">Company Name</th>
+            <th class="min-w-[16%]">Company Website</th>
+            <th class="min-w-[16%]">Industry</th>
+            <th class="min-w-[16%]">No. of Employees</th>
+            <th class="min-w-[16%]">Annual Revenue</th>
+            <th class="min-w-[16%]">Name</th>
+            <th class="min-w-[16%]">Title</th>
+            <th class="min-w-[20%]">Email</th>
+            <th class="min-w-[16%]">Phone</th>
+            <th class="min-w-[16%]">Company Keyword</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr *ngFor="let lead of leads" class="hover:bg-card/50">
+            <td>
+              {{lead.time}}
+            </td>
+            <td>{{ lead.userId }}</td>
+            <td >
+             {{lead.projId}}
+            </td>
+            <td >
+             {{lead.score}}
+            </td>
+            <td>
+              {{ lead.country }}
+            </td>
+            <td>
+              {{ lead.companyName }}
+            </td>
+            <td>
+              {{ lead.companyWeb }}
+            </td>
+            <td>
+              {{ lead.industry }}
+            </td>
+            <td>
+              {{ lead.employees }}
+            </td>
+            <td>
+              {{ lead.revenue }}
+            </td>
+            <td>
+              {{ lead.name }}
+            </td>
+            <td>
+              {{ lead.title }}
+            </td>
+            <td>
+              {{ lead.email }}
+            </td>
+            <td>
+              {{ lead.phone }}
+            </td>
+            <td>
+              {{ lead.companyKeyword }}
+            </td>
+            <td class="flex justify-center items-center gap-2">
+              <button class="bg-destructive text-primary-foreground rounded-md px-2 py-1 text-xs font-semibold">
+                Delete
+              </button>
+              <button class="ml-[3px] bg-muted rounded-md px-2 py-1 text-xs font-semibold text-muted-foreground hover:text-foreground">
+                Update
+              </button>
+            </td>
+          </tr>
+          
+          <tr *ngIf="!dummyData">
+            <td class="py-4 text-center text-sm" colspan="7">No users found</td>
+          </tr>
+         
+        </tbody>
+      </table>
+    </div>
+    <!-- <app-table-footer></app-table-footer> -->
+  </div>
+  
