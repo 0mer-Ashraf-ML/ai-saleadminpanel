@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="inline-block space-x-4">
-      <button class="bg-primary text-primary-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">
+      <button (click)="toggleAddModalBox()" class="bg-primary text-primary-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">
         Add Team
       </button>
     </div>
@@ -38,10 +38,10 @@
              {{team.role}}
             </td>
             <td class="flex justify-center items-center gap-2">
-              <button class="bg-destructive text-primary-foreground rounded-md px-2 py-1 text-xs font-semibold">
+              <button (click)="toggleDeleteModalBox()" class="bg-destructive text-primary-foreground rounded-md px-3 py-2 text-xs font-semibold">
                 Delete
               </button>
-              <button class="ml-[3px] bg-white text-gray-700 rounded-md px-2 py-1 text-xs font-semibold">
+              <button (click)="update()" class="bg-white text-gray-700 rounded-md px-3 py-2 text-xs font-semibold">
                 Update
               </button>
             </td>
@@ -57,3 +57,56 @@
     <!-- <app-table-footer></app-table-footer> -->
   </div>
   
+  <section
+  *ngIf="isAddModalBoxVisible"
+  class="bg-background/80 dark:bg-muted-foreground/50 fixed inset-0 z-50 flex items-center justify-center p-4"
+  (click)="toggleAddModalBox()">
+  <div
+    class="bg-card text-foreground w-full max-w-md rounded-lg p-6 shadow-2xl"
+    (click)="$event.stopPropagation()">
+    <h2 class="mb-4 text-lg font-semibold">{{ isUpdate ? 'Update Team' : 'Add New Team' }}</h2>
+
+    <div class="space-y-3">
+      <label class="block text-sm font-medium">Name</label>
+      <input
+        type="text"
+        class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2" />
+
+      <label class="block text-sm font-medium">Email</label>
+      <input
+        type="password"
+        class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2" />
+
+      <label class="block text-sm font-medium">Role</label>
+      <input
+        type="text"
+        class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2" />
+    </div>
+
+    <div class="mt-4 flex justify-end space-x-2">
+      <button
+        (click)="toggleAddModalBox()"
+        class="bg-muted text-sm text-muted-foreground hover:bg-muted-foreground hover:text-background rounded-md px-3 py-2 font-medium transition">
+        Cancel
+      </button>
+      <button
+        (click)="toggleAddModalBox()"
+        class="bg-primary text-sm text-primary-foreground hover:bg-primary/80 rounded-md px-3 py-2 font-medium transition">
+        {{ isUpdate ? 'Update' : 'Add' }}
+      </button>
+    </div>
+  </div>
+</section>
+
+<section *ngIf="isDeleteModalBoxVisible" class="bg-background/80 dark:bg-muted-foreground/50 fixed inset-0 z-50 flex items-center justify-center p-4" (click)="toggleDeleteModalBox()">
+  <div class="bg-card text-foreground  w-full max-w-md rounded-lg  p-6 shadow-2xl" (click)="$event.stopPropagation()">
+    <h2 class="mb-4 font-semibold">Are you sure, you want to delete this</h2>
+    <div class="flex items-center justify-end space-x-2">
+      <button (click)="toggleDeleteModalBox()"
+        class="bg-muted text-muted-foreground hover:bg-muted-foreground hover:text-background rounded-md px-3 py-2 text-sm font-medium transition">
+        Cancel
+      </button>
+      <button (click)="toggleDeleteModalBox()" class="bg-destructive text-primary-foreground rounded-md px-3 py-2 text-sm font-semibold">Delete</button>
+    </div>
+  </div>
+</section>

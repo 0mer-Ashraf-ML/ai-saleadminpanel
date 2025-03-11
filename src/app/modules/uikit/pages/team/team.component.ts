@@ -9,6 +9,23 @@ import { CommonModule } from '@angular/common';
   styleUrl: './team.component.css'
 })
 export class TeamComponent {
+  isAddModalBoxVisible: boolean = false;
+  isUpdate: boolean = false;
+  isDeleteModalBoxVisible: boolean = false;
+
+  toggleAddModalBox(): void {
+    this.isAddModalBoxVisible = !this.isAddModalBoxVisible;
+    this.isUpdate = false;
+  }
+
+  update(): void {
+    this.isUpdate = !this.isUpdate;
+    this.isAddModalBoxVisible = !this.isAddModalBoxVisible;
+  }
+
+  toggleDeleteModalBox():void {
+    this.isDeleteModalBoxVisible = !this.isDeleteModalBoxVisible;
+  }
 dummyData: User[] = [
   {
     id: 1,

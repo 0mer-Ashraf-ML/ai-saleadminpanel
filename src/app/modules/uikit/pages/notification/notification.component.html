@@ -1,67 +1,129 @@
 <div class="mb-4 flex justify-between">
-    <div class="inline-block">
-      <h3 class="text-foreground font-semibold">Notifications</h3>
-      <div class="text-muted-foreground space-x-1 text-xs font-medium">
-        <a href="" class="hover:text-primary">All Notifications:</a>
-        <span class="text-foreground">{{notifications.length}}</span>
-      </div>
+  <div class="inline-block">
+    <h3 class="text-foreground font-semibold">Notifications</h3>
+    <div class="text-muted-foreground space-x-1 text-xs font-medium">
+      <a href="" class="hover:text-primary">All Notifications:</a>
+      <span class="text-foreground">{{ notifications.length }}</span>
     </div>
-    <div class="inline-block space-x-4">
-      <button class="bg-primary text-primary-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">
-        Create New
+  </div>
+  <div class="inline-block space-x-4">
+    <button
+      (click)="toggleAddModalBox()"
+      class="bg-primary text-primary-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">
+      Create New
+    </button>
+  </div>
+</div>
+
+<div class="border-muted/20 bg-background flex min-w-full flex-col rounded-xl border p-2">
+  <!-- <app-table-action></app-table-action> -->
+  <div
+    class="scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted grow overflow-x-auto px-5">
+    <table
+      class="text-muted-foreground table w-full table-auto border-collapse border-0 text-center align-middle leading-5">
+      <thead class="border-muted/20 text-muted-foreground border text-xs">
+        <tr>
+          <th class="min-w-[20%]">Time</th>
+          <th class="min-w-[20%]">Type</th>
+          <th class="min-w-[20%]">Title</th>
+          <th class="min-w-[20%]">Contents</th>
+          <th class="min-w-[20%]">Status</th>
+          <th class="min-w-[20%] text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let notification of notifications" class="hover:bg-card/50">
+          <td>
+            {{ notification.time }}
+          </td>
+          <td>{{ notification.type }}</td>
+          <td>
+            {{ notification.title }}
+          </td>
+          <td>
+            {{ notification.title }}
+          </td>
+          <td>
+            {{ notification.status }}
+          </td>
+          <td class="flex items-center justify-center gap-2">
+            <button
+              (click)="toggleDeleteModalBox()"
+              class="bg-destructive text-primary-foreground cusrsor-pointer rounded-md px-3 py-2 text-xs font-semibold">
+              Delete
+            </button>
+            <button
+              (click)="update()"
+              class="cusrsor-pointer rounded-md bg-white px-3 py-2 text-xs font-semibold text-gray-700">
+              Update
+            </button>
+            <button
+              class="text-primary-foreground cusrsor-pointer rounded-md bg-[#22C55E] px-3 py-2 text-xs font-semibold">
+              Send
+            </button>
+          </td>
+        </tr>
+
+        <!-- <tr *ngIf="!dummyData">
+            <td class="py-4 text-center text-sm" colspan="7">No users found</td>
+          </tr> -->
+      </tbody>
+    </table>
+  </div>
+  <!-- <app-table-footer></app-table-footer> -->
+</div>
+
+<!-- Add Notification Modal Box -->
+<section
+  *ngIf="isAddModalBoxVisible"
+  class="bg-background/80 dark:bg-muted-foreground/50 fixed inset-0 z-50 flex items-center justify-center p-4"
+  (click)="toggleAddModalBox()">
+  <div
+    class="bg-card text-foreground w-full max-w-md rounded-lg p-6 shadow-2xl"
+    (click)="$event.stopPropagation()">
+    <h2 class="mb-4 text-lg font-semibold">{{ isUpdate ? 'Update Notification' : 'Add New Notification' }}</h2>
+
+    <div class="space-y-3">
+      <label class="block text-sm font-medium">Type</label>
+      <input
+        type="text"
+        class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2" />
+
+      <label class="block text-sm font-medium">Title</label>
+      <input
+        type="text"
+        class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2" />
+
+      <label class="block text-sm font-medium">Contents</label>
+      <textarea
+        class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2"></textarea>
+    </div>
+
+    <div class="mt-4 flex justify-end space-x-2">
+      <button
+        (click)="toggleAddModalBox()"
+        class="bg-muted text-sm text-muted-foreground hover:bg-muted-foreground hover:text-background rounded-md px-3 py-2 font-medium transition">
+        Cancel
+      </button>
+      <button
+        (click)="toggleAddModalBox()"
+        class="bg-primary text-sm text-primary-foreground hover:bg-primary/80 rounded-md px-3 py-2 font-medium transition">
+        {{ isUpdate ? 'Update' : 'Add' }}
       </button>
     </div>
   </div>
-  
-  <div class="border-muted/20 bg-background flex min-w-full flex-col rounded-xl border p-2">
-    <!-- <app-table-action></app-table-action> -->
-    <div
-      class="scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted grow overflow-x-auto px-5">
-      <table
-        class="text-muted-foreground table w-full table-auto border-collapse border-0 align-middle leading-5 text-center">
-        <thead class="border-muted/20 text-muted-foreground border text-xs">
-          <tr>
-            <th class="min-w-[20%]">Time</th>
-            <th class="min-w-[20%]">Type</th>
-            <th class="min-w-[20%]">Title</th>
-            <th class="min-w-[20%]">Contents</th>
-            <th class="min-w-[20%]">Status</th>
-            <th class="min-w-[20%] text-center">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          
-          <tr *ngFor="let notification of notifications" class="hover:bg-card/50">
-            <td>
-              {{notification.time}}
-            </td>
-            <td>{{ notification.type }}</td>
-            <td >
-             {{notification.title}}
-            </td>
-            <td >
-             {{notification.title}}
-            </td>
-            <td>
-              {{ notification.status }}
-            </td>
-            <td class="flex justify-center items-center gap-2">
-              <button class="bg-destructive text-primary-foreground rounded-md px-2 py-1 text-xs font-semibold">
-                Delete
-              </button>
-              <button class="ml-[3px] bg-white text-gray-700 rounded-md px-2 py-1 text-xs font-semibold">
-                Update
-              </button>
-            </td>
-          </tr>
-          
-          <!-- <tr *ngIf="!dummyData">
-            <td class="py-4 text-center text-sm" colspan="7">No users found</td>
-          </tr> -->
-         
-        </tbody>
-      </table>
+</section>
+
+<!-- Delete Modal Box -->
+<section *ngIf="isDeleteModalBoxVisible" class="bg-background/80 dark:bg-muted-foreground/50 fixed inset-0 z-50 flex items-center justify-center p-4" (click)="toggleDeleteModalBox()">
+  <div class="bg-card text-foreground  w-full max-w-md rounded-lg  p-6 shadow-2xl" (click)="$event.stopPropagation()">
+    <h2 class="mb-4 font-semibold">Are you sure, you want to delete this</h2>
+    <div class="flex items-center justify-end space-x-2">
+      <button (click)="toggleDeleteModalBox()"
+        class="bg-muted text-muted-foreground hover:bg-muted-foreground hover:text-background rounded-md px-3 py-2 text-sm font-medium transition">
+        Cancel
+      </button>
+      <button (click)="toggleDeleteModalBox()" class="bg-destructive text-primary-foreground rounded-md px-3 py-2 text-sm font-semibold">Delete</button>
     </div>
-    <!-- <app-table-footer></app-table-footer> -->
   </div>
-  
+</section>
