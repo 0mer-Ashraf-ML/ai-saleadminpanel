@@ -81,36 +81,59 @@
   <div
     class="bg-card text-foreground w-full max-w-md rounded-lg p-6 shadow-2xl"
     (click)="$event.stopPropagation()">
-    <h2 class="mb-4 text-lg font-semibold">{{ isUpdate ? 'Update Notification' : 'Add New Notification' }}</h2>
+    <h2 class="mb-4 text-lg font-semibold">{{ isUpdate ? 'Update Notification' : 'notify New Notification' }}</h2>
 
-    <div class="space-y-3">
-      <label class="block text-sm font-medium">Type</label>
-      <input
-        type="text"
-        class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2" />
+    <form [formGroup]="notifyForm" (ngSubmit)="onSubmit($event)">
+      <div class="space-y-3">
+        <!-- Type -->
+        <label class="block text-sm font-medium">Type</label>
+        <input
+          type="text"
+          formControlName="type"
+          class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2" />
+        <div *ngIf="notifyForm.get('type')?.touched && notifyForm.get('type')?.invalid" class="text-red-500 text-sm">
+          Type is required.
+        </div>
+    
+        <!-- Title -->
+        <label class="block text-sm font-medium">Title</label>
+        <input
+          type="text"
+          formControlName="title"
+          class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2" />
+        <div *ngIf="notifyForm.get('title')?.touched && notifyForm.get('title')?.invalid" class="text-red-500 text-sm">
+          Title is required
+        </div>
+    
+        <!-- Contents -->
+        <label class="block text-sm font-medium">Contents</label>
+        <textarea
+          formControlName="contents"
+          class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2"></textarea>
+        <div *ngIf="notifyForm.get('contents')?.touched && notifyForm.get('contents')?.invalid" class="text-red-500 text-sm">
+          Contents are required.
+        </div>
+      </div>
+    
+      <!-- Buttons -->
+      <div class="mt-4 flex justify-end space-x-2">
+        <button
+          type="button"
+          (click)="toggleAddModalBox()"
+          class="bg-muted text-sm text-muted-foreground hover:bg-muted-foreground hover:text-background rounded-md px-3 py-2 font-medium transition">
+          Cancel
+        </button>
+        <button
+        type="submit"
+        class="bg-primary text-sm text-primary-foreground hover:bg-primary/80 rounded-md px-3 py-2 font-medium transition 
+               disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="notifyForm.invalid">
+  {{ isUpdate ? 'Update' : 'Add' }}
+</button>
 
-      <label class="block text-sm font-medium">Title</label>
-      <input
-        type="text"
-        class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2" />
-
-      <label class="block text-sm font-medium">Contents</label>
-      <textarea
-        class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2"></textarea>
-    </div>
-
-    <div class="mt-4 flex justify-end space-x-2">
-      <button
-        (click)="toggleAddModalBox()"
-        class="bg-muted text-sm text-muted-foreground hover:bg-muted-foreground hover:text-background rounded-md px-3 py-2 font-medium transition">
-        Cancel
-      </button>
-      <button
-        (click)="toggleAddModalBox()"
-        class="bg-primary text-sm text-primary-foreground hover:bg-primary/80 rounded-md px-3 py-2 font-medium transition">
-        {{ isUpdate ? 'Update' : 'Add' }}
-      </button>
-    </div>
+      </div>
+    </form>
+    
   </div>
 </section>
 

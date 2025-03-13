@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 // import { User } from '../table/model/user.model';
 import { CommonModule } from '@angular/common';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-notification',
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './notification.component.html',
   styleUrl: './notification.component.css',
 })
@@ -12,6 +13,25 @@ export class NotificationComponent {
   isAddModalBoxVisible: boolean = false;
   isUpdate: boolean = false;
   isDeleteModalBoxVisible: boolean = false;
+  notifyForm: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.notifyForm = this.fb.group({
+      type: ['', Validators.required],
+      title: ['', [Validators.required]],
+      contents: ['', [Validators.required]],
+    });
+  }
+
+  onSubmit(event: Event) {
+    event.preventDefault();
+    if (this.notifyForm.invalid) {
+      this.notifyForm.markAllAsTouched(); // Mark all fields as touched to show validation errors
+      return;
+    }
+    console.log(this.notifyForm.value); // Handle form submission logic
+    this.toggleAddModalBox();
+  }
 
   toggleAddModalBox(): void {
     this.isAddModalBoxVisible = !this.isAddModalBoxVisible;

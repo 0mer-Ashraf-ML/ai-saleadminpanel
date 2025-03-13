@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { User } from '../table/model/user.model';
 import { CommonModule } from '@angular/common';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-team',
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './team.component.html',
   styleUrl: './team.component.css'
 })
@@ -178,4 +179,27 @@ teams: any[] = [
     role: 'abc',
   },
 ]
+
+userForm: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.userForm = this.fb.group({
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      role: ['', Validators.required]
+    });
+  }
+
+  onSubmit(event: Event) {
+    event.preventDefault();
+
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      return;
+    }
+
+    console.log(this.userForm.value);
+
+    this.toggleAddModalBox();
+  }
 }
