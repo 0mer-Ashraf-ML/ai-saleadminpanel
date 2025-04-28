@@ -1,10 +1,11 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { NgClass } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ThemeService } from '../../../../../core/services/theme.service';
 import { ClickOutsideDirective } from '../../../../../shared/directives/click-outside.directive';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
   selector: 'app-profile-menu',
@@ -35,6 +36,8 @@ import { ClickOutsideDirective } from '../../../../../shared/directives/click-ou
   ],
 })
 export class ProfileMenuComponent implements OnInit {
+  isLoggedIn = false;
+    private readonly commonService = inject(CommonService);
   public isOpen = false;
   public profileMenu = [
     {
@@ -87,9 +90,21 @@ export class ProfileMenuComponent implements OnInit {
 
   public themeMode = ['light', 'dark'];
 
-  constructor(public themeService: ThemeService) {}
+  constructor(public themeService: ThemeService, private route: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit() {
+    this.isLoggedIn = this.commonService.isLoggedIn();
+  }
+
+  logout() {
+    this.commonService.logout();
+    this.route.navigate(['/login']);
+    this.isLoggedIn = false;
+  }
+
+  login() {
+    this.route.navigate(['/login']);
+  }
 
   public toggleMenu(): void {
     this.isOpen = !this.isOpen;

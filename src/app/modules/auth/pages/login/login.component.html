@@ -1,0 +1,73 @@
+<section class="px-[2%] lg:px-[9%] py-4 grid place-items-center min-h-screen dark:bg-black relative">
+    <div class="w-full sm:max-w-md bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl z-10">
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white text-center mb-8">
+        Login
+      </h1>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit($event)" class="space-y-6">
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+          <div class="mt-1 relative">
+            <i class="fa-solid fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-primary"></i>
+            <input
+              formControlName="email"
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              required
+              class="pl-10 pr-3 py-3 w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
+            />
+          </div>
+          <div *ngIf="email?.touched && email?.invalid" class="text-red-500 text-sm mt-1">
+            Enter a valid email.
+          </div>
+        </div>
+  
+        <!-- Password -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+          <div class="mt-1 relative">
+            <i class="fa-solid fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-primary"></i>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              id="password"
+              placeholder="Enter your password"
+              required
+              class="pl-10 pr-10 py-3 w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
+            />
+            <i
+              class="fa-solid {{ showPassword ? 'fa-eye-slash' : 'fa-eye' }} absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 cursor-pointer"
+              (click)="togglePasswordVisibility()"
+            ></i>
+          </div>
+          <div *ngIf="password?.touched && password?.invalid" class="text-red-500 text-sm mt-1">
+            <div *ngIf="password?.hasError('required')">Password is required.</div>
+            <div *ngIf="password?.hasError('minlength')">Password must be at least 8 characters.</div>
+            <div *ngIf="password?.hasError('invalidPassword')">Invalid password format.</div>
+          </div>
+        </div>
+  
+        <!-- Remember Me & Forgot Password -->
+        <div class="flex justify-end items-center text-xs md:text-sm">
+          <a routerLink="/forgot-password" class="text-primary hover:text-primary/80">Forgot Password?</a>
+        </div>
+  
+        <!-- Submit -->
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid || isLoading"
+          class="w-full py-3 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-medium disabled:opacity-50"
+        >
+          {{ isLoading ? 'Logging in...' : 'Log in' }}
+        </button>
+      </form>
+  
+      <!-- Register Link -->
+      <p class="text-center mt-6 text-gray-700 dark:text-gray-300 text-sm">
+        Don't have an account?
+        <a routerLink="/register" class="text-primary hover:text-primary/80 font-medium">Register here</a>.
+      </p>
+    </div>
+  </section>
+  

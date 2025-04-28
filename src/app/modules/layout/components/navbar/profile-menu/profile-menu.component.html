@@ -1,4 +1,9 @@
-<div class="relative ml-3">
+<div class="relative ml-3 flex items-center gap-2">
+  <a
+  (click)="isLoggedIn ? logout() : login()"
+  class="mt-2 focus-visible:ring-ring border-border bg-background text-muted-foreground hover:bg-card hover:text-foreground shadow-xs inline-flex h-8 cursor-pointer items-center justify-center whitespace-nowrap rounded-md border px-3 text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50">
+  {{ isLoggedIn ? 'Logout' : 'Login' }}
+</a>
   <div class="mt-2 grid grid-cols-2 gap-2">
     @for (item of themeMode; track $index) {
     <div
@@ -16,6 +21,8 @@
     </div>
     }
   </div>
+  
+
   <!-- Profile Button -->
   <!-- <button (click)="toggleMenu()" class="bg-card relative flex rounded-full text-sm" type="button">
     <span class="sr-only">Open user menu</span>

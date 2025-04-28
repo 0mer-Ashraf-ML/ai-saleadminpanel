@@ -1,72 +1,138 @@
 <div class="mb-4 flex justify-between">
-    <div class="inline-block">
-      <h3 class="text-foreground font-semibold">Users</h3>
-      <div class="text-muted-foreground space-x-1 text-xs font-medium">
-        <a href="" class="hover:text-primary">All Users</a>
-        <span class="text-foreground">{{users.length}}</span>
+  <div class="inline-block">
+    <h3 class="text-foreground font-semibold">Users</h3>
+    <div class="text-muted-foreground space-x-1 text-xs font-medium">
+      <a href="" class="hover:text-primary">All Users:</a>
+      <span class="text-foreground">{{ users.length }}</span>
+    </div>
+  </div>
+  <div class="inline-block space-x-4">
+    <button (click)="toggleAddModalBox()"
+      class="bg-primary text-primary-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">
+      Add User
+    </button>
+  </div>
+</div>
+
+<div class="border-muted/20 bg-background flex min-w-full flex-col rounded-xl border p-2">
+  <!-- <app-table-action></app-table-action> -->
+  <div
+    class="scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted grow overflow-x-auto px-5">
+    <table
+      class="text-muted-foreground table w-full table-auto border-collapse border-0 text-center align-middle leading-5">
+      <thead class="border-muted/20 text-muted-foreground border text-xs">
+        <tr>
+          <th class="min-w-[16%]">Time</th>
+          <th class="min-w-[16%]">User ID</th>
+          <th class="min-w-[16%]">Country</th>
+          <th class="min-w-[16%]">Name</th>
+          <th class="min-w-[20%]">Email</th>
+          <th class="min-w-[20%]">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users" class="hover:bg-card/50">
+          <td>
+            {{user.time}}
+          </td>
+          <td>
+            {{user.userId}}
+          </td>
+          <td>
+            {{user.country}}
+          </td>
+          <td>
+            {{ user.name }}
+          </td>
+          <td>{{ user.email }}</td>
+          <td class="flex items-center justify-center gap-2">
+            <button (click)="toggleDeleteModalBox()"
+              class="bg-destructive text-primary-foreground rounded-md px-3 py-2 text-xs font-semibold">
+              Delete
+            </button>
+            <button (click)="update()" class="rounded-md bg-white px-3 py-2 text-xs font-semibold text-gray-700">
+              Update
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="!dummyData">
+          <td class="py-4 text-center text-sm" colspan="7">No users found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- <app-table-footer></app-table-footer> -->
+</div>
+
+<section *ngIf="isAddModalBoxVisible"
+  class="bg-background/80 dark:bg-muted-foreground/50 fixed inset-0 z-50 flex items-center justify-center p-4"
+  (click)="toggleAddModalBox()">
+  <div class="bg-card text-foreground w-full max-w-md rounded-lg p-6 shadow-2xl" (click)="$event.stopPropagation()">
+    <h2 class="mb-4 text-lg font-semibold">{{ isUpdate ? 'Update User' : 'Add New User' }}</h2>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit($event)">
+      <div class="space-y-3">
+        <!-- Name Field -->
+        <label class="block text-sm font-medium">Name</label>
+        <input type="text" formControlName="name"
+          class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2" />
+        <div *ngIf="userForm.get('name')?.touched && userForm.get('name')?.invalid" class="text-red-500 text-sm">
+          Name is required.
+        </div>
+
+        <!-- Email Field -->
+        <label class="block text-sm font-medium">Email</label>
+        <input type="email" formControlName="email"
+          class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2" />
+        <div *ngIf="userForm.get('email')?.touched && userForm.get('email')?.invalid" class="text-red-500 text-sm">
+          <span *ngIf="userForm.get('email')?.errors?.['required']">Email is required.</span>
+          <span *ngIf="userForm.get('email')?.errors?.['email']">Enter a valid email address.</span>
+        </div>
+
+        <!-- Role Field -->
+        <label class="block text-sm font-medium">Role</label>
+        <select formControlName="role"
+          class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2">
+          <option value="" disabled selected>Select a role</option>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+        <div *ngIf="userForm.get('role')?.touched && userForm.get('role')?.invalid" class="text-red-500 text-sm">
+          Role is required.
+        </div>
       </div>
-    </div>
-    <!-- <div class="inline-block space-x-4">
-      <button class="bg-primary text-primary-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">
-        Add User
+
+      <!-- Buttons -->
+      <div class="mt-4 flex justify-end space-x-2">
+        <button type="button" (click)="toggleAddModalBox()"
+          class="bg-muted text-muted-foreground hover:bg-muted-foreground hover:text-background rounded-md px-3 py-2 text-sm font-medium transition">
+          Cancel
+        </button>
+        <button type="submit"
+          class="bg-primary text-primary-foreground hover:bg-primary/80 rounded-md px-3 py-2 text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+          [disabled]="userForm.invalid">
+          {{ isUpdate ? 'Update' : 'Add' }}
+        </button>
+      </div>
+    </form>
+
+  </div>
+</section>
+
+<section *ngIf="isDeleteModalBoxVisible"
+  class="bg-background/80 dark:bg-muted-foreground/50 fixed inset-0 z-50 flex items-center justify-center p-4"
+  (click)="toggleDeleteModalBox()">
+  <div class="bg-card text-foreground w-full max-w-md rounded-lg p-6 shadow-2xl" (click)="$event.stopPropagation()">
+    <h2 class="mb-4 font-semibold">Are you sure, you want to delete this</h2>
+    <div class="flex items-center justify-end space-x-2">
+      <button (click)="toggleDeleteModalBox()"
+        class="bg-muted text-muted-foreground hover:bg-muted-foreground hover:text-background rounded-md px-3 py-2 text-sm font-medium transition">
+        Cancel
       </button>
-    </div> -->
-  </div>
-  
-  <div class="border-muted/20 bg-background flex min-w-full flex-col rounded-xl border p-2">
-    <!-- <app-table-action></app-table-action> -->
-    <div
-      class="scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted grow overflow-x-auto px-5">
-      <table
-        class="text-muted-foreground table w-full table-auto border-collapse border-0 align-middle leading-5 text-center">
-        <thead class="border-muted/20 text-muted-foreground border text-xs">
-          <tr>
-            <th class="min-w-[16%]">Time</th>
-            <th class="min-w-[16%]">User ID</th>
-            <th class="min-w-[16%]">Country</th>
-            <th class="min-w-[16%]">Name</th>
-            <th class="min-w-[20%]">Email</th>
-            <th class="min-w-[20%]">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          
-          <tr *ngFor="let user of users" class="hover:bg-card/50">
-            <td>
-              {{user.time}}
-            </td>
-            <td>{{ user.userId }}</td>
-            <td >
-             {{user.country}}
-            </td>
-            <td>
-              {{ user.name }}
-            </td>
-            <td>
-              {{ user.email }}
-            </td>
-            <td>
-              <button class="bg-[#22C55E] text-primary-foreground rounded-md px-3 py-2 text-xs font-semibold cusrsor-pointer">
-                View
-              </button>
-            </td>
-            <!-- <td class="flex justify-center items-center gap-2">
-              <button class="bg-destructive text-primary-foreground rounded-md px-2 py-1 text-xs font-semibold">
-                Delete
-              </button>
-              <button class="ml-[3px] bg-muted rounded-md px-2 py-1 text-xs font-semibold text-muted-foreground hover:text-foreground">
-                Update
-              </button>
-            </td> -->
-          </tr>
-          
-          <tr *ngIf="!dummyData">
-            <td class="py-4 text-center text-sm" colspan="7">No users found</td>
-          </tr>
-         
-        </tbody>
-      </table>
+      <button (click)="toggleDeleteModalBox()"
+        class="bg-destructive text-primary-foreground rounded-md px-3 py-2 text-sm font-semibold">
+        Delete
+      </button>
     </div>
-    <!-- <app-table-footer></app-table-footer> -->
   </div>
-  
+</section>

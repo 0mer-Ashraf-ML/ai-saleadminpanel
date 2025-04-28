@@ -8,7 +8,8 @@
         <a
           (click)="toggleSidebar()"
           class="flex cursor-pointer items-center justify-center rounded-sm p-2 focus:outline-hidden focus:ring-1">
-          <img src="assets/icons/logo.png" class="w-10">
+          <img src="assets/icons/logo-light.png" class="w-32 block dark:hidden">
+          <img src="assets/icons/logo-dark.png" class="w-32 hidden dark:block">
         </a>
         <b class="text-foreground ml-1 pl-2 text-sm font-bold">
           {{ appJson.displayName }}
