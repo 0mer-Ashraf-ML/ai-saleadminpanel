@@ -23,8 +23,8 @@
       <thead class="border-muted/20 text-muted-foreground border text-xs">
         <tr>
           <th class="min-w-[16%]">Time</th>
-          <th class="min-w-[16%]">User ID</th>
-          <th class="min-w-[16%]">Country</th>
+          <!-- <th class="min-w-[16%]">User ID</th> -->
+          <!-- <th class="min-w-[16%]">Country</th> -->
           <th class="min-w-[16%]">Name</th>
           <th class="min-w-[20%]">Email</th>
           <th class="min-w-[20%]">Action</th>
@@ -33,16 +33,16 @@
       <tbody>
         <tr *ngFor="let user of users" class="hover:bg-card/50">
           <td>
-            {{user.time}}
+            {{user.createdAt | date:'dd-MM-yyyy'}}
           </td>
-          <td>
-            {{user.userId}}
-          </td>
-          <td>
+          <!-- <td>
+            {{user.id}}
+          </td> -->
+          <!-- <td>
             {{user.country}}
-          </td>
+          </td> -->
           <td>
-            {{ user.name }}
+            {{ user.fullName }}
           </td>
           <td>{{ user.email }}</td>
           <td class="flex items-center justify-center gap-2">
@@ -56,9 +56,9 @@
           </td>
         </tr>
 
-        <tr *ngIf="!dummyData">
+        <!-- <tr *ngIf="users.length === 0">
           <td class="py-4 text-center text-sm" colspan="7">No users found</td>
-        </tr>
+        </tr> -->
       </tbody>
     </table>
   </div>

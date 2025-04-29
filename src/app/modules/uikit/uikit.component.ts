@@ -7,4 +7,6 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './uikit.component.html',
   styleUrl: './uikit.component.css',
 })
-export class UikitComponent {}
+export class UikitComponent {
+  
+}

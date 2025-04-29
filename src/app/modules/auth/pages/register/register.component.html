@@ -1,0 +1,154 @@
+<section class="px-[2%] lg:px-[9%] py-4 grid place-items-center min-h-full dark:bg-black relative">
+    <!-- Background Gradients (matches login page) -->
+    <div aria-hidden="true" class="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20">
+        <div class="blur-[106px] h-56 bg-gradient-to-br from-primary to-purple-400 dark:from-blue-700"></div>
+        <div class="blur-[106px] h-32 bg-gradient-to-r from-cyan-400 to-sky-300 dark:to-indigo-600"></div>
+    </div>
+
+    <div
+        class="flex flex-col sm:flex-row items-center gap-6 lg:gap-10 p-6 rounded-2xl sm:shadow-2xl bg-white dark:bg-gray-800 w-full lg:w-11/12 mx-auto">
+        <!-- Content Section (matches login styling) -->
+        <div class="w-full sm:w-1/2 flex flex-col px-4 lg:px-12 text-sm text-gray-700 dark:text-gray-300 z-10">
+            <!-- Header Section -->
+            <div class="mb-6">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white text-center mb-3">
+                    Welcome to <span class="text-primary">AI-Powered</span> Sales Prospecting
+                </h1>
+            </div>
+
+
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit($event)" class="space-y-4">
+                <!-- Name Input -->
+                <div>
+                    <label for="userName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Name</label>
+                    <div class="mt-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-user text-primary"></i>
+                        </div>
+                        <input formControlName="userName" type="text" required
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                            placeholder="Enter your name" id="userName" />
+                    </div>
+                    <div *ngIf="registerForm.get('userName')?.touched && registerForm.get('userName')?.invalid"
+                        class="text-red-500 text-sm mt-1">
+                        Name is required.
+                    </div>
+                </div>
+
+                <!-- Email Input -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                    <div class="mt-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-envelope text-primary"></i>
+                        </div>
+                        <input formControlName="email" type="email" required
+                            class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                            placeholder="Enter your email" id="email" />
+                    </div>
+                    <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
+                        class="text-red-500 text-sm mt-1">
+                        Enter a valid email.
+                    </div>
+                </div>
+
+                <!-- Password Input -->
+                <div>
+                    <label for="password"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                    <div class="mt-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-lock text-primary"></i>
+                        </div>
+                        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" required
+                            class="block w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                            placeholder="Enter your password" id="password" />
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                            <i class="fa-solid {{ showPassword ? 'fa-eye-slash' : 'fa-eye' }} text-gray-500 dark:text-gray-400 cursor-pointer transition-opacity duration-300"
+                                (click)="togglePasswordVisibility()"></i>
+                        </div>
+                    </div>
+                    <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
+                        class="text-red-500 text-sm mt-1">
+                        <div *ngIf="registerForm.get('password')?.hasError('required')">Password is required.</div>
+                        <div *ngIf="registerForm.get('password')?.hasError('minlength')">Password must be at least 8
+                            characters.</div>
+                        <div *ngIf="registerForm.get('password')?.hasError('invalidPassword')">Password must include
+                            uppercase, lowercase, a digit, and a special character.</div>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Input -->
+                <div>
+                    <label for="confirmPassword"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
+                    <div class="mt-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-lock text-primary"></i>
+                        </div>
+                        <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword"
+                            required
+                            class="block w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                            placeholder="Confirm your password" id="confirmPassword" />
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                            <i class="fa-solid {{ showConfirmPassword ? 'fa-eye-slash' : 'fa-eye' }} text-gray-500 dark:text-gray-400 cursor-pointer transition-opacity duration-300"
+                                (click)="toggleConfirmPasswordVisibility()"></i>
+                        </div>
+                    </div>
+                    <div *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.hasError('mismatch')"
+                        class="text-red-500 text-sm mt-1">
+                        Passwords must match.
+                    </div>
+                </div>
+
+                <!-- Terms and Conditions Checkbox -->
+                <div class="flex items-center mt-4">
+                    <input type="checkbox" id="terms" required
+                        class="h-3 w-3 accent-primary text-primary focus:ring-primary border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-800">
+                    <label for="terms" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                        I accept the <a class="text-primary hover:underline cursor-pointer" target="_blank">Terms and
+                            Conditions</a> and
+                        <a class="text-primary hover:underline cursor-pointer" target="_blank">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit"
+                    class="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary rounded-lg cursor-pointer transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+                    [disabled]="registerForm.invalid || isLoading">
+                    {{ isLoading ? 'Registering...' : 'Register' }}
+                </button>
+            </form>
+
+            <!-- Login Link -->
+            <p class="text-center mt-8 text-gray-700 dark:text-gray-300">
+                Already have an account?
+                <a class="text-primary hover:text-primary/80 transition-all duration-300" routerLink="/login">Login
+                    here</a>
+            </p>
+        </div>
+
+        <!-- Image Section -->
+        <div class="hidden sm:flex sm:w-1/2 relative">
+            <img loading="eager" class="object-cover w-full h-[50vh] lg:h-[85vh] rounded-2xl"
+                src="https://public.readdy.ai/ai/img_res/9227c1ffd36096abba63eabdaaa17339.jpg"
+                alt="AI Sales Growth Image">
+            <div class="absolute inset-0 bg-gradient-to-l from-primary/80 to-transparent rounded-2xl"></div>
+            <div class="absolute bottom-8 left-8 max-w-md">
+                <h2 class="text-white text-2xl font-bold mb-3">
+                    Join the Future of AI-Driven Marketing
+                </h2>
+                <p class="text-white/90 text-base">
+                    Start your journey today and unlock the power of AI to revolutionize your marketing strategies.
+                </p>
+                <ul class="mt-2 md:mt-3 space-y-1 md:space-y-2 text-white text-sm md:text-base">
+                    <li *ngFor="let benefit of benefits" class="flex items-center">
+                        <i class="fas fa-check-circle text-white mt-0.5 mr-2 text-sm md:text-base"></i>
+                        <span>{{benefit}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

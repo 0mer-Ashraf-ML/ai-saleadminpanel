@@ -19,7 +19,12 @@ export class AuthService {
 
   login(email: string, password: string): Observable<any> {
     return this.http
-      .post<any>(`${this.api}/auth/login`, { email: email, password })
+      .post<any>(`${this.api}/auth/admin/login`, { email: email, password })
+  }
+
+  findAll(): Observable<any> {
+    return this.http
+      .get<any>(`${this.api}/auth/getUsers`)
   }
 
   register(fullname: string, email: string, password: string): Observable<any> {

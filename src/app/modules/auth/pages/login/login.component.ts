@@ -60,7 +60,7 @@ export class LoginComponent {
         this.isLoading = false;
 
         if (error.status === 401) {
-          this.toastr.error('Invalid email or password');
+          this.toastr.error(error.error.message);
         } else if (error.error?.message) {
           this.toastr.error(error.error.message);
         } else {

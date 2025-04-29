@@ -18,7 +18,7 @@ if (environment.production) {
 }
 
 bootstrapApplication(AppComponent, {
-  providers: [importProvidersFrom(BrowserModule, AppRoutingModule), provideAnimations(), provideHttpClient(withInterceptors([authInterceptor])),   ...provideToastrConfig(),],
+  providers: [importProvidersFrom(BrowserModule, AppRoutingModule),...provideToastrConfig(), provideAnimations(), provideHttpClient(withInterceptors([authInterceptor]))],
 }).catch((err) => console.error(err));
 
 function selfXSSWarning() {
