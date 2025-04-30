@@ -1,8 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { User } from '../table/model/user.model';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { lastValueFrom } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+
 import { AuthService } from 'src/app/modules/layout/services/auth.service';
+import { Role, RoleDisplayNames } from 'src/app/enums/role.enum';
+import { HttpErrorResponse } from '@angular/common/http';
+import { CommonService } from 'src/app/modules/layout/services/common.service';
 
 @Component({
   selector: 'app-users',
@@ -11,57 +16,127 @@ import { AuthService } from 'src/app/modules/layout/services/auth.service';
   styleUrl: './users.component.css',
 })
 export class UsersComponent implements OnInit {
-  private readonly authService = inject(AuthService);
-  users: any[] = [];
+  // State variables
+  isAddModalBoxVisible = false;
+  isUpdate = false;
+  isDeleteModalBoxVisible = false;
+  selectedUser: any | null = null;
 
-  ngOnInit() {
-    this.authService.findAll().subscribe({
+  // Data
+  users: any[] = [];
+  RoleDisplayNames = RoleDisplayNames;
+  roleOptions = [
+    { label: 'Super Admin', value: Role.SuperAdmin },
+    { label: 'Admin', value: Role.Admin },
+    { label: 'User', value: Role.User },
+  ];
+  
+  // Form
+  userForm: FormGroup;
+
+  // Services
+  private readonly authService = inject(AuthService);
+
+  constructor(private fb: FormBuilder, private toastr: ToastrService, private commonSrv: CommonService) {
+    this.userForm = this.fb.group({
+      id: [''],
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      role: [null, Validators.required],
+    });
+  }
+
+  ngOnInit(): void {
+    const currentUser = this.commonSrv.getUser();
+    if (Number(currentUser?.role) !== Number(Role.SuperAdmin)) {
+      this.roleOptions = this.roleOptions.filter(
+        option => option.value !== Role.SuperAdmin
+      );
+    }
+  
+    this.loadUsers();
+  }
+
+
+  // Utility
+  getRoleDisplay(role: string | number): string {
+    return this.RoleDisplayNames[+role as keyof typeof RoleDisplayNames];
+  }
+
+  // Load all users
+  async loadUsers(): Promise<void> {
+    this.authService.getUsers().subscribe({
       next: (data) => {
         this.users = data.data;
-        console.log('All Users', this.users);
+        console.log('All Users: ', this.users);
       },
       error: (error) => {
-        if (error.status === 401) {
-          // this.toastr.error('Invalid email or password');
-        } else if (error.error?.message) {
-          // this.toastr.error(error.error.message);
-        } else {
-          // this.toastr.error('Login failed. Please try again later');
-        }
+        console.error('Error loading users', error);
+        this.toastr.error('Failed to load users');
       },
     });
   }
 
-  isAddModalBoxVisible: boolean = false;
-  isUpdate: boolean = false;
-  isDeleteModalBoxVisible: boolean = false;
-
+  // Modal controls
   toggleAddModalBox(): void {
     this.isAddModalBoxVisible = !this.isAddModalBoxVisible;
     this.isUpdate = false;
-  }
-
-  update(): void {
-    this.isUpdate = !this.isUpdate;
-    this.isAddModalBoxVisible = !this.isAddModalBoxVisible;
   }
 
   toggleDeleteModalBox(): void {
     this.isDeleteModalBoxVisible = !this.isDeleteModalBoxVisible;
   }
 
-  userForm: FormGroup;
-
-  constructor(private fb: FormBuilder) {
-    this.userForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      country: ['', Validators.required],
-      role: ['', Validators.required],
-    });
+  // Populate form for update
+  update(id: string): void {
+    this.isUpdate = true;
+    this.isAddModalBoxVisible = true;
+    this.selectedUser = this.users.find((user) => user.id === id);
+    if(Number(this.selectedUser.role) === Role.SuperAdmin) {
+      this.userForm.get('role')?.disable();
+    }
+    else{
+      this.userForm.get('role')?.enable();
+    }
+    if (this.selectedUser) {
+      this.userForm.patchValue({
+        id: this.selectedUser.id,
+        name: this.selectedUser.fullName,
+        email: this.selectedUser.email,
+        role: this.selectedUser.role,
+      });
+      console.log('Selected User', this.selectedUser);
+    }
   }
 
-  onSubmit(event: Event) {
+  delete(id: string): void {
+    this.selectedUser = this.users.find((user) => user.id === id);
+    this.toggleDeleteModalBox();
+  }
+
+  async confirmDelete(): Promise<void> {
+    if (!this.selectedUser) return;
+  
+    try {
+      await lastValueFrom(this.authService.deleteUser(this.selectedUser.id));
+      this.toastr.success('User deleted successfully');
+      this.loadUsers();
+    } catch (error: unknown) {
+      console.error('Error deleting user:', error);
+    
+      if (error instanceof HttpErrorResponse) {
+        this.toastr.error(error.error?.message || 'Failed to delete user');
+      } else {
+        this.toastr.error('Unexpected error occurred');
+      }
+    }
+    
+  
+    this.toggleDeleteModalBox();
+  }
+
+  // Form submission
+  async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
 
     if (this.userForm.invalid) {
@@ -69,196 +144,21 @@ export class UsersComponent implements OnInit {
       return;
     }
 
-    console.log(this.userForm.value);
+    try {
+      const res = await lastValueFrom(
+        this.authService.updateUser(this.selectedUser.id, {
+          role: this.userForm.value.role,
+          fullName: this.userForm.value.name,
+          email: this.userForm.value.email,
+        })
+      );
+      this.toastr.success('User updated successfully');
+      this.loadUsers();
+    } catch (error) {
+      this.toastr.error('Failed to update user');
+      console.error('Error', error);
+    }
 
     this.toggleAddModalBox();
   }
-
-  dummyData: User[] = [
-    {
-      id: 1,
-      name: 'John Doe',
-      age: 30,
-      username: 'johndoe',
-      email: 'john.doe@example.com',
-      phone: '+1-202-555-0156',
-      website: 'johndoe.com',
-      occupation: 'Software Engineer',
-      hobbies: ['coding', 'hiking', 'reading'],
-      selected: false,
-      status: 1,
-      created_at: '2024-10-12T12:34:56Z',
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      age: 25,
-      username: 'janesmith',
-      email: 'jane.smith@example.com',
-      phone: '+1-202-555-0123',
-      website: 'janesmith.net',
-      occupation: 'Graphic Designer',
-      hobbies: ['drawing', 'photography', 'travel'],
-      selected: false,
-      status: 1,
-      created_at: '2024-10-14T12:34:56Z',
-    },
-    {
-      id: 3,
-      name: 'Michael Brown',
-      age: 35,
-      username: 'michaelb',
-      email: 'michael.brown@example.com',
-      phone: '+1-202-555-0189',
-      website: 'michaelbrown.me',
-      occupation: 'Data Scientist',
-      hobbies: ['data analysis', 'cycling', 'music'],
-      selected: true,
-      status: 2,
-      created_at: '2024-10-16T12:34:56Z',
-    },
-    {
-      id: 4,
-      name: 'Emily White',
-      age: 28,
-      username: 'emilyw',
-      email: 'emily.white@example.com',
-      phone: '+1-202-555-0147',
-      website: 'emilywhite.org',
-      occupation: 'Marketing Specialist',
-      hobbies: ['writing', 'yoga', 'baking'],
-      selected: false,
-      status: 2,
-      created_at: '2024-10-18T12:34:56Z',
-    },
-    {
-      id: 5,
-      name: 'David Johnson',
-      age: 40,
-      username: 'davidj',
-      email: 'david.johnson@example.com',
-      phone: '+1-202-555-0168',
-      website: 'davidjohnson.co',
-      occupation: 'Product Manager',
-      hobbies: ['innovation', 'gaming', 'finance'],
-      selected: true,
-      status: 1,
-      created_at: '2024-10-20T12:34:56Z',
-    },
-    {
-      id: 6,
-      name: 'Sarah Davis',
-      age: 32,
-      username: 'sarahd',
-      email: 'sarah.davis@example.com',
-      phone: '+1-202-555-0190',
-      website: 'sarahdavis.dev',
-      occupation: 'UI/UX Designer',
-      hobbies: ['design', 'gardening', 'swimming'],
-      selected: false,
-      status: 1,
-      created_at: '2024-10-22T12:34:56Z',
-    },
-    {
-      id: 7,
-      name: 'Chris Lee',
-      age: 29,
-      username: 'chrislee',
-      email: 'chris.lee@example.com',
-      phone: '+1-202-555-0134',
-      website: 'chrislee.io',
-      occupation: 'Mobile Developer',
-      hobbies: ['app development', 'traveling', 'reading'],
-      selected: false,
-      status: 1,
-      created_at: '2024-10-26T12:34:56Z',
-    },
-    {
-      id: 8,
-      name: 'Emma Wilson',
-      age: 27,
-      username: 'emmawilson',
-      email: 'emma.wilson@example.com',
-      phone: '+1-202-555-0175',
-      website: 'emmawilson.tech',
-      occupation: 'DevOps Engineer',
-      hobbies: ['automation', 'gaming', 'blogging'],
-      selected: true,
-      status: 3,
-      created_at: '2024-10-28T12:34:56Z',
-    },
-  ];
-
-  // users: any[] = [
-  //   {
-  //     time: '2024-10-12T12:34:56Z',
-  //     userId: '123',
-  //     country: 'XYZ',
-  //     name: 'Asad',
-  //     email: 'test@test.com',
-  //   },
-  //   {
-  //     time: '2024-10-12T12:34:56Z',
-  //     userId: '123',
-  //     country: 'XYZ',
-  //     name: 'Asad',
-  //     email: 'test@test.com',
-  //   },
-  //   {
-  //     time: '2024-10-12T12:34:56Z',
-  //     userId: '123',
-  //     country: 'XYZ',
-  //     name: 'Asad',
-  //     email: 'test@test.com',
-  //   },
-  //   {
-  //     time: '2024-10-12T12:34:56Z',
-  //     userId: '123',
-  //     country: 'XYZ',
-  //     name: 'Asad',
-  //     email: 'test@test.com',
-  //   },
-  //   {
-  //     time: '2024-10-12T12:34:56Z',
-  //     userId: '123',
-  //     country: 'XYZ',
-  //     name: 'Asad',
-  //     email: 'test@test.com',
-  //   },
-  //   {
-  //     time: '2024-10-12T12:34:56Z',
-  //     userId: '123',
-  //     country: 'XYZ',
-  //     name: 'Asad',
-  //     email: 'test@test.com',
-  //   },
-  //   {
-  //     time: '2024-10-12T12:34:56Z',
-  //     userId: '123',
-  //     country: 'XYZ',
-  //     name: 'Asad',
-  //     email: 'test@test.com',
-  //   },
-  //   {
-  //     time: '2024-10-12T12:34:56Z',
-  //     userId: '123',
-  //     country: 'XYZ',
-  //     name: 'Asad',
-  //     email: 'test@test.com',
-  //   },
-  //   {
-  //     time: '2024-10-12T12:34:56Z',
-  //     userId: '123',
-  //     country: 'XYZ',
-  //     name: 'Asad',
-  //     email: 'test@test.com',
-  //   },
-  //   {
-  //     time: '2024-10-12T12:34:56Z',
-  //     userId: '123',
-  //     country: 'XYZ',
-  //     name: 'Asad',
-  //     email: 'test@test.com',
-  //   },
-  // ];
 }

@@ -22,11 +22,6 @@ export class AuthService {
       .post<any>(`${this.api}/auth/admin/login`, { email: email, password })
   }
 
-  findAll(): Observable<any> {
-    return this.http
-      .get<any>(`${this.api}/auth/getUsers`)
-  }
-
   register(fullname: string, email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.api}/auth/register`, {
       fullName: fullname,
@@ -80,5 +75,16 @@ export class AuthService {
     });
   }
 
+  getUsers(): Observable<any> {
+    return this.http
+      .get<any>(`${this.api}/auth/users`)
+  }
 
+  updateUser(id: string, data: any): Observable<any> {
+    return this.http.patch<any>(`${this.api}/auth/${id}`, data)
+  }
+
+  deleteUser(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.api}/auth/${id}`)
+  }
 }

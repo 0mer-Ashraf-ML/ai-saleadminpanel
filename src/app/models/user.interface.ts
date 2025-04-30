@@ -15,4 +15,5 @@ export interface IUser {
   };
   stripe_customer_id?: string;
   updatedAt?: string;
+  role: string | number;
 }

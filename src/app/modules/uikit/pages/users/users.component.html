@@ -7,10 +7,10 @@
     </div>
   </div>
   <div class="inline-block space-x-4">
-    <button (click)="toggleAddModalBox()"
+    <!-- <button (click)="toggleAddModalBox()"
       class="bg-primary text-primary-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">
       Add User
-    </button>
+    </button> -->
   </div>
 </div>
 
@@ -23,10 +23,9 @@
       <thead class="border-muted/20 text-muted-foreground border text-xs">
         <tr>
           <th class="min-w-[16%]">Time</th>
-          <!-- <th class="min-w-[16%]">User ID</th> -->
-          <!-- <th class="min-w-[16%]">Country</th> -->
           <th class="min-w-[16%]">Name</th>
           <th class="min-w-[20%]">Email</th>
+          <th class="min-w-[20%]">Role</th>
           <th class="min-w-[20%]">Action</th>
         </tr>
       </thead>
@@ -35,30 +34,27 @@
           <td>
             {{user.createdAt | date:'dd-MM-yyyy'}}
           </td>
-          <!-- <td>
-            {{user.id}}
-          </td> -->
-          <!-- <td>
-            {{user.country}}
-          </td> -->
           <td>
             {{ user.fullName }}
           </td>
           <td>{{ user.email }}</td>
+          <td>{{ getRoleDisplay(user.role) }}</td>
           <td class="flex items-center justify-center gap-2">
-            <button (click)="toggleDeleteModalBox()"
-              class="bg-destructive text-primary-foreground rounded-md px-3 py-2 text-xs font-semibold">
+            <button (click)="delete(user.id)"
+              class="bg-destructive text-primary-foreground rounded-md px-3 py-2 text-xs font-semibold"
+              style="cursor: pointer;">
               Delete
             </button>
-            <button (click)="update()" class="rounded-md bg-white px-3 py-2 text-xs font-semibold text-gray-700">
+            <button (click)="update(user.id)" class="rounded-md bg-white px-3 py-2 text-xs font-semibold text-gray-700"
+              style="cursor: pointer;">
               Update
             </button>
           </td>
         </tr>
 
-        <!-- <tr *ngIf="users.length === 0">
+        <tr *ngIf="users.length === 0">
           <td class="py-4 text-center text-sm" colspan="7">No users found</td>
-        </tr> -->
+        </tr>
       </tbody>
     </table>
   </div>
@@ -93,10 +89,11 @@
         <label class="block text-sm font-medium">Role</label>
         <select formControlName="role"
           class="border-border bg-muted text-foreground placeholder-muted-foreground focus:ring-primary w-full rounded-md border p-2 focus:outline-none focus:ring-2">
-          <option value="" disabled selected>Select a role</option>
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
+          <option value="" disabled>Select a role</option>
+          <option *ngFor="let role of roleOptions" [value]="role.value">{{ role.label }}</option>
+
         </select>
+
         <div *ngIf="userForm.get('role')?.touched && userForm.get('role')?.invalid" class="text-red-500 text-sm">
           Role is required.
         </div>
@@ -129,7 +126,7 @@
         class="bg-muted text-muted-foreground hover:bg-muted-foreground hover:text-background rounded-md px-3 py-2 text-sm font-medium transition">
         Cancel
       </button>
-      <button (click)="toggleDeleteModalBox()"
+      <button (click)="confirmDelete()"
         class="bg-destructive text-primary-foreground rounded-md px-3 py-2 text-sm font-semibold">
         Delete
       </button>

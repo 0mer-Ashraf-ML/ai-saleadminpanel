@@ -11,4 +11,5 @@ export interface User {
   selected: boolean;
   status: number;
   created_at: string;
+  role?: number
 }
