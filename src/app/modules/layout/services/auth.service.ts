@@ -77,14 +77,14 @@ export class AuthService {
 
   getUsers(): Observable<any> {
     return this.http
-      .get<any>(`${this.api}/auth/users`)
+      .get<any>(`${this.api}/auth/admin/users`)
   }
 
   updateUser(id: string, data: any): Observable<any> {
-    return this.http.patch<any>(`${this.api}/auth/${id}`, data)
+    return this.http.patch<any>(`${this.api}/auth/admin/${id}`, data)
   }
 
   deleteUser(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.api}/auth/${id}`)
+    return this.http.delete<any>(`${this.api}/auth/admin/${id}`)
   }
 }
