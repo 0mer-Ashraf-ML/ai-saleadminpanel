@@ -11,6 +11,7 @@ import { CommonService } from 'src/app/modules/layout/services/common.service';
 
 @Component({
   selector: 'app-users',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -21,6 +22,7 @@ export class UsersComponent implements OnInit {
   isUpdate = false;
   isDeleteModalBoxVisible = false;
   selectedUser: any | null = null;
+  isLoading = false;
 
   // Data
   users: any[] = [];
@@ -36,8 +38,11 @@ export class UsersComponent implements OnInit {
 
   // Services
   private readonly authService = inject(AuthService);
+  private readonly fb = inject(FormBuilder);
+  private readonly toastr = inject(ToastrService);
+  private readonly commonSrv = inject(CommonService);
 
-  constructor(private fb: FormBuilder, private toastr: ToastrService, private commonSrv: CommonService) {
+  constructor() {
     this.userForm = this.fb.group({
       id: [''],
       name: ['', Validators.required],
@@ -57,7 +62,6 @@ export class UsersComponent implements OnInit {
     this.loadUsers();
   }
 
-
   // Utility
   getRoleDisplay(role: string | number): string {
     return this.RoleDisplayNames[+role as keyof typeof RoleDisplayNames];
@@ -65,14 +69,19 @@ export class UsersComponent implements OnInit {
 
   // Load all users
   async loadUsers(): Promise<void> {
+    this.isLoading = true;
     this.authService.getUsers().subscribe({
       next: (data) => {
+        this.isLoading = false;
         this.users = data.data;
-        console.log('All Users: ', this.users);
       },
       error: (error) => {
-        console.error('Error loading users', error);
-        this.toastr.error('Failed to load users');
+        this.isLoading = false;
+        if (error instanceof HttpErrorResponse) {
+          this.toastr.error(error.error?.message || 'Error loading users');
+        } else {
+          this.toastr.error('An unexpected error occurred while loading users');
+        }
       },
     });
   }
@@ -81,6 +90,9 @@ export class UsersComponent implements OnInit {
   toggleAddModalBox(): void {
     this.isAddModalBoxVisible = !this.isAddModalBoxVisible;
     this.isUpdate = false;
+    if (!this.isAddModalBoxVisible) {
+      this.userForm.reset();
+    }
   }
 
   toggleDeleteModalBox(): void {
@@ -105,7 +117,6 @@ export class UsersComponent implements OnInit {
         email: this.selectedUser.email,
         role: this.selectedUser.role,
       });
-      console.log('Selected User', this.selectedUser);
     }
   }
 
@@ -117,21 +128,21 @@ export class UsersComponent implements OnInit {
   async confirmDelete(): Promise<void> {
     if (!this.selectedUser) return;
   
+    this.isLoading = true;
     try {
       await lastValueFrom(this.authService.deleteUser(this.selectedUser.id));
+      this.isLoading = false;
       this.toastr.success('User deleted successfully');
       this.loadUsers();
     } catch (error: unknown) {
-      console.error('Error deleting user:', error);
-    
+      this.isLoading = false;
       if (error instanceof HttpErrorResponse) {
         this.toastr.error(error.error?.message || 'Failed to delete user');
       } else {
-        this.toastr.error('Unexpected error occurred');
+        this.toastr.error('An unexpected error occurred while deleting user');
       }
     }
     
-  
     this.toggleDeleteModalBox();
   }
 
@@ -141,9 +152,11 @@ export class UsersComponent implements OnInit {
 
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
+      this.toastr.error('Please fix the errors in the form');
       return;
     }
 
+    this.isLoading = true;
     try {
       const res = await lastValueFrom(
         this.authService.updateUser(this.selectedUser.id, {
@@ -152,13 +165,17 @@ export class UsersComponent implements OnInit {
           email: this.userForm.value.email,
         })
       );
+      this.isLoading = false;
       this.toastr.success('User updated successfully');
       this.loadUsers();
-    } catch (error) {
-      this.toastr.error('Failed to update user');
-      console.error('Error', error);
+      this.toggleAddModalBox();
+    } catch (error: unknown) {
+      this.isLoading = false;
+      if (error instanceof HttpErrorResponse) {
+        this.toastr.error(error.error?.message || 'Failed to update user');
+      } else {
+        this.toastr.error('An unexpected error occurred while updating user');
+      }
     }
-
-    this.toggleAddModalBox();
   }
 }
