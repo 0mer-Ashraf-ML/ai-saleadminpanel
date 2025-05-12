@@ -23,6 +23,7 @@ export class UsersComponent implements OnInit {
   isDeleteModalBoxVisible = false;
   selectedUser: any | null = null;
   isLoading = false;
+  isSuspended = false;
 
   // Data
   users: any[] = [];
@@ -32,7 +33,7 @@ export class UsersComponent implements OnInit {
     { label: 'Admin', value: Role.Admin },
     { label: 'User', value: Role.User },
   ];
-  
+
   // Form
   userForm: FormGroup;
 
@@ -48,17 +49,16 @@ export class UsersComponent implements OnInit {
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       role: [null, Validators.required],
+      suspended: [false],
     });
   }
 
   ngOnInit(): void {
     const currentUser = this.commonSrv.getUser();
     if (Number(currentUser?.role) !== Number(Role.SuperAdmin)) {
-      this.roleOptions = this.roleOptions.filter(
-        option => option.value !== Role.SuperAdmin
-      );
+      this.roleOptions = this.roleOptions.filter((option) => option.value !== Role.SuperAdmin);
     }
-  
+
     this.loadUsers();
   }
 
@@ -104,10 +104,9 @@ export class UsersComponent implements OnInit {
     this.isUpdate = true;
     this.isAddModalBoxVisible = true;
     this.selectedUser = this.users.find((user) => user.id === id);
-    if(Number(this.selectedUser.role) === Role.SuperAdmin) {
+    if (Number(this.selectedUser.role) === Role.SuperAdmin) {
       this.userForm.get('role')?.disable();
-    }
-    else{
+    } else {
       this.userForm.get('role')?.enable();
     }
     if (this.selectedUser) {
@@ -116,6 +115,7 @@ export class UsersComponent implements OnInit {
         name: this.selectedUser.fullName,
         email: this.selectedUser.email,
         role: this.selectedUser.role,
+        suspended: this.selectedUser.suspended ?? false,
       });
     }
   }
@@ -127,7 +127,7 @@ export class UsersComponent implements OnInit {
 
   async confirmDelete(): Promise<void> {
     if (!this.selectedUser) return;
-  
+
     this.isLoading = true;
     try {
       await lastValueFrom(this.authService.deleteUser(this.selectedUser.id));
@@ -142,7 +142,7 @@ export class UsersComponent implements OnInit {
         this.toastr.error('An unexpected error occurred while deleting user');
       }
     }
-    
+
     this.toggleDeleteModalBox();
   }
 
@@ -163,7 +163,8 @@ export class UsersComponent implements OnInit {
           role: this.userForm.value.role,
           fullName: this.userForm.value.name,
           email: this.userForm.value.email,
-        })
+          suspended: this.userForm.value.suspended, // <-- Add this
+        }),
       );
       this.isLoading = false;
       this.toastr.success('User updated successfully');
@@ -177,5 +178,25 @@ export class UsersComponent implements OnInit {
         this.toastr.error('An unexpected error occurred while updating user');
       }
     }
+  }
+
+  toggleSuspend(user: any): void {
+    const updatedStatus = !user.isSuspended;
+
+    this.authService
+      .updateUser(user.id, {
+        isSuspended: updatedStatus,
+      })
+      .subscribe({
+        next: () => {
+          user.isSuspended = updatedStatus;
+          console.log('Block', updatedStatus);
+          console.log('UserId', user.id);
+          this.toastr.success(`User ${updatedStatus ? 'suspended' : 'unblocked'} successfully`);
+        },
+        error: (error) => {
+          this.toastr.error('Failed to update suspension status');
+        },
+      });
   }
 }

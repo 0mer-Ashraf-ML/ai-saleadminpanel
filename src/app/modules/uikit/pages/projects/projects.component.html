@@ -20,39 +20,39 @@
       <table
         class="text-muted-foreground table w-full table-auto border-collapse border-0 align-middle leading-5 text-center">
         <thead class="border-muted/20 text-muted-foreground border text-xs">
-          <tr>
+          <tr >
             <th class="min-w-[16%]">Time</th>
-            <th class="min-w-[16%]">Project ID</th>
+            <!-- <th class="min-w-[16%]">Project ID</th> -->
             <th class="min-w-[16%]">Project Name</th>
-            <th class="min-w-[16%]">User ID</th>
+            <!-- <th class="min-w-[16%]">User ID</th> -->
             <th class="min-w-[16%]">Country</th>
-            <th class="min-w-[16%]">Name</th>
-            <th class="min-w-[20%]">Email</th>
+            <!-- <th class="min-w-[16%]">Name</th> -->
+            <!-- <th class="min-w-[20%]">Email</th> -->
             <th class="min-w-[20%]">Action</th>
           </tr>
         </thead>
         <tbody>
           
-          <tr *ngFor="let project of projects" class="hover:bg-card/50">
+          <tr *ngFor="let company of companies" class="hover:bg-card/50">
             <td>
-              {{project.time}}
+              {{company.created_at  | date : 'dd-MM-yyyy'}}
             </td>
-            <td>{{ project.projId }}</td>
+            <!-- <td>{{ project.projId }}</td> -->
             <td >
-             {{project.projName}}
+             {{company.company_name}}
             </td>
-            <td>
+            <!-- <td>
               {{ project.userId }}
-            </td>
+            </td> -->
             <td>
-              {{ project.country }}
+              {{ company.target_region }}
             </td>
-            <td>
+            <!-- <td>
               {{ project.name }}
-            </td>
-            <td>
+            </td> -->
+            <!-- <td>
               {{ project.email }}
-            </td>
+            </td> -->
             <td>
               <button class="bg-[#22C55E] text-primary-foreground rounded-md px-3 py-2 text-xs font-semibold cusrsor-pointer">
                 View
@@ -68,8 +68,8 @@
             </td> -->
           </tr>
           
-          <tr *ngIf="!dummyData">
-            <td class="py-4 text-center text-sm" colspan="7">No users found</td>
+          <tr *ngIf="!companies">
+            <td class="py-4 text-center text-sm" colspan="7">No companies found</td>
           </tr>
          
         </tbody>
