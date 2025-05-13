@@ -6,10 +6,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
 import { SpinnerService } from 'src/app/modules/layout/services/spinner.service';
+import { TableFooterComponent } from "../table/components/table-footer/table-footer.component";
 
 @Component({
   selector: 'app-projects',
-  imports: [CommonModule],
+  imports: [CommonModule, TableFooterComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss',
 })

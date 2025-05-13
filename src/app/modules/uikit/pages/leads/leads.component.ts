@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { User } from '../table/model/user.model';
 import { CommonModule } from '@angular/common';
+import { TableFooterComponent } from "../table/components/table-footer/table-footer.component";
 
 @Component({
   selector: 'app-leads',
-  imports: [CommonModule],
+  imports: [CommonModule, TableFooterComponent],
   templateUrl: './leads.component.html',
   styleUrl: './leads.component.css'
 })

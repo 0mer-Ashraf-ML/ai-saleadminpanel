@@ -8,11 +8,12 @@ import { AuthService } from 'src/app/modules/layout/services/auth.service';
 import { Role, RoleDisplayNames } from 'src/app/enums/role.enum';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonService } from 'src/app/modules/layout/services/common.service';
+import { TableFooterComponent } from '../table/components/table-footer/table-footer.component';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TableFooterComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
 })
