@@ -33,7 +33,6 @@ export class ProjectsComponent {
       .subscribe({
         next: (data: { data: any[] }) => {
           this.companies = data.data ?? [];
-          console.log('Companies', data);
 
           if (this.companies.length > 0) {
             this.toastr.success(`${this.companies.length} companies loaded successfully`);

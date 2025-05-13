@@ -198,7 +198,6 @@ userForm: FormGroup;
       return;
     }
 
-    console.log(this.userForm.value);
 
     this.toggleAddModalBox();
   }
