@@ -29,7 +29,6 @@ export class NotificationComponent {
       this.notifyForm.markAllAsTouched(); // Mark all fields as touched to show validation errors
       return;
     }
-    console.log(this.notifyForm.value); // Handle form submission logic
     this.toggleAddModalBox();
   }
 

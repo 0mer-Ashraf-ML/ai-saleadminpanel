@@ -191,8 +191,6 @@ export class UsersComponent implements OnInit {
       .subscribe({
         next: () => {
           user.isSuspended = updatedStatus;
-          console.log('Block', updatedStatus);
-          console.log('UserId', user.id);
           this.toastr.success(`User ${updatedStatus ? 'suspended' : 'unblocked'} successfully`);
         },
         error: (error) => {
