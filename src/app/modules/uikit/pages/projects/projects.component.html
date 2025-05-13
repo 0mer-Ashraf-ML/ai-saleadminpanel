@@ -1,75 +1,137 @@
 <div class="mb-4 flex justify-between">
-    <div class="inline-block">
-      <h3 class="text-foreground font-semibold">Projects</h3>
-      <div class="text-muted-foreground space-x-1 text-xs font-medium">
-        <a href="" class="hover:text-primary">All Projects</a>
-        <span class="text-foreground">{{companies.length}}</span>
+  <div class="inline-block">
+    <h3 class="text-foreground font-semibold">Projects</h3>
+    <div class="text-muted-foreground space-x-1 text-xs font-medium">
+      <a href="" class="hover:text-primary">All Projects</a>
+      <span class="text-foreground">{{companies.length}}</span>
+    </div>
+  </div>
+</div>
+
+<div class="border-muted/20 bg-background flex min-w-full flex-col rounded-xl border p-2">
+  <!-- <app-table-action></app-table-action> -->
+  <div
+    class="scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted grow overflow-x-auto px-5">
+    <table
+      class="text-muted-foreground table w-full table-auto border-collapse border-0 align-middle leading-5 text-center">
+      <thead class="border-muted/20 text-muted-foreground border text-xs">
+        <tr>
+          <th class="min-w-[16%]">Time</th>
+          <th class="min-w-[16%]">Project Name</th>
+          <th class="min-w-[16%]">Country</th>
+          <th class="min-w-[16%]">Name</th>
+          <th class="min-w-[20%]">Email</th>
+          <th class="min-w-[20%]">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr *ngFor="let company of companies" class="hover:bg-card/50">
+          <td>
+            {{company.created_at | date : 'dd-MM-yyyy'}}
+          </td>
+          <!-- <td>{{ project.projId }}</td> -->
+          <td>
+            {{company.company_name}}
+          </td>
+          <td>
+            {{ company.user.country }}
+          </td>
+          <td>
+            {{company.user.fullName }}
+          </td>
+          <td>
+            {{ company.user.email }}
+          </td>
+          <td class="flex items-center justify-center gap-2">
+            <button (click)="viewCompanyDetails(company)"
+              class="bg-[#22C55E] text-primary-foreground rounded-md px-3 py-2 text-xs font-semibold cursor-pointer">
+              View
+            </button>
+            <button (click)="delete(company.id)"
+              class="bg-destructive text-primary-foreground rounded-md px-3 py-2 text-xs font-semibold"
+              style="cursor: pointer">
+              Delete
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="!companies">
+          <td class="py-4 text-center text-sm" colspan="7">No companies found</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+  <app-table-footer></app-table-footer>
+</div>
+
+<section *ngIf="isDeleteModalBoxVisible"
+  class="bg-background/80 dark:bg-muted-foreground/50 fixed inset-0 z-50 flex items-center justify-center p-4"
+  (click)="toggleDeleteModalBox()">
+  <div class="bg-card text-foreground w-full max-w-md rounded-lg p-6 shadow-2xl" (click)="$event.stopPropagation()">
+    <h2 class="mb-4 font-semibold">Are you sure, you want to delete <span class="text-primary">"{{selectedCompany.company_name}}"</span>?</h2>
+    <div class="flex items-center justify-end space-x-2">
+      <button (click)="toggleDeleteModalBox()"
+        class="bg-muted text-muted-foreground hover:bg-muted-foreground hover:text-background rounded-md px-3 py-2 text-sm font-medium transition">
+        Cancel
+      </button>
+      <button (click)="confirmDelete()"
+        class="bg-destructive text-primary-foreground rounded-md px-3 py-2 text-sm font-semibold">
+        Delete
+      </button>
+    </div>
+  </div>
+</section>
+
+<section
+  *ngIf="isViewModalVisible"
+  class="bg-background/80 dark:bg-muted-foreground/50 fixed inset-0 z-50 flex items-center justify-center p-4"
+  (click)="closeViewModal()">
+  <div class="bg-card text-foreground w-full max-w-2xl rounded-lg p-6 shadow-2xl" (click)="$event.stopPropagation()">
+    <h2 class="text-primary mb-4 text-lg font-semibold">Product Information</h2>
+    <div *ngIf="viewedCompany" class="space-y-3 text-sm">
+
+      <div>
+        <span class="font-semibold">Company: </span>
+        <span>{{ viewedCompany.company_name }}</span>
+      </div>
+
+      <div>
+        <span class="font-semibold">Product: </span>
+        <span>{{ viewedCompany.products_services }}</span>
+      </div>
+      <div>
+        <span class="font-medium mr-2">Product url:</span>
+              <a href="{{ viewedCompany.web_url }}" target="_blank" class="text-blue-500 hover:underline">
+                {{ viewedCompany.web_url }}
+              </a>
+      </div>
+
+      <h2 class="text-primary mb-4 mt-8 text-lg font-semibold">ICP</h2>
+      <div>
+        <span class="font-semibold">Region: </span>
+        <span>{{ viewedCompany.target_region || 'N/A' }}</span>
+      </div>
+      <div>
+        <span class="font-semibold">Industry: </span>
+        <span>{{ viewedCompany.target_industries || 'N/A' }}</span>
+      </div>
+      <div>
+        <span class="font-semibold">Company Size: </span>
+        <span>{{ viewedCompany.preferred_company_size || 'N/A' }}</span>
+      </div>
+      <div>
+        <span class="font-semibold">Contact Seniority: </span>
+        <span>{{ viewedCompany.preferred_contact_department || 'N/A' }}</span>
+      </div>
+
+      <div class="flex justify-end">
+        <button (click)="closeViewModal()"
+          class="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90">
+          Close
+        </button>
       </div>
     </div>
-    <!-- <div class="inline-block space-x-4">
-      <button class="bg-primary text-primary-foreground flex-none rounded-md px-4 py-2.5 text-xs font-semibold">
-        Add Project
-      </button>
-    </div> -->
   </div>
-  
-  <div class="border-muted/20 bg-background flex min-w-full flex-col rounded-xl border p-2">
-    <!-- <app-table-action></app-table-action> -->
-    <div
-      class="scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted grow overflow-x-auto px-5">
-      <table
-        class="text-muted-foreground table w-full table-auto border-collapse border-0 align-middle leading-5 text-center">
-        <thead class="border-muted/20 text-muted-foreground border text-xs">
-          <tr >
-            <th class="min-w-[16%]">Time</th>
-            <th class="min-w-[16%]">Project Name</th>
-            <th class="min-w-[16%]">Country</th>
-            <th class="min-w-[16%]">Name</th>
-            <th class="min-w-[20%]">Email</th>
-            <th class="min-w-[20%]">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          
-          <tr *ngFor="let company of companies" class="hover:bg-card/50">
-            <td>
-              {{company.created_at  | date : 'dd-MM-yyyy'}}
-            </td>
-            <!-- <td>{{ project.projId }}</td> -->
-            <td >
-             {{company.company_name}}
-            </td>
-            <td>
-              {{ company.user.country }}
-            </td>
-            <td>
-              {{company.user.fullName }}
-            </td>
-            <td>
-              {{ company.user.email }}
-            </td>
-            <td>
-              <button class="bg-[#22C55E] text-primary-foreground rounded-md px-3 py-2 text-xs font-semibold cusrsor-pointer">
-                View
-              </button>
-            </td>
-            <!-- <td class="flex justify-center items-center gap-2">
-              <button class="bg-destructive text-primary-foreground rounded-md px-2 py-1 text-xs font-semibold">
-                Delete
-              </button>
-              <button class="ml-[3px] bg-muted rounded-md px-2 py-1 text-xs font-semibold text-muted-foreground hover:text-foreground">
-                Update
-              </button>
-            </td> -->
-          </tr>
-          
-          <tr *ngIf="!companies">
-            <td class="py-4 text-center text-sm" colspan="7">No companies found</td>
-          </tr>
-         
-        </tbody>
-      </table>
-    </div>
-    <app-table-footer></app-table-footer>
-  </div>
-  
+</section>
