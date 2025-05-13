@@ -44,8 +44,10 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+playwright.yml
 .vercel
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
