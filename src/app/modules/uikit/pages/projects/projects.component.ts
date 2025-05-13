@@ -28,7 +28,7 @@ export class ProjectsComponent {
     this.spinner.show();
 
     this.companyService
-      .getCompanies()
+      .getAllCompanies()
       .pipe(finalize(() => this.spinner.hide()))
       .subscribe({
         next: (data: { data: any[] }) => {

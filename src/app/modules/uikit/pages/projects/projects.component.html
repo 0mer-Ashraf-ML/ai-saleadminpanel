@@ -22,12 +22,10 @@
         <thead class="border-muted/20 text-muted-foreground border text-xs">
           <tr >
             <th class="min-w-[16%]">Time</th>
-            <!-- <th class="min-w-[16%]">Project ID</th> -->
             <th class="min-w-[16%]">Project Name</th>
-            <!-- <th class="min-w-[16%]">User ID</th> -->
             <th class="min-w-[16%]">Country</th>
-            <!-- <th class="min-w-[16%]">Name</th> -->
-            <!-- <th class="min-w-[20%]">Email</th> -->
+            <th class="min-w-[16%]">Name</th>
+            <th class="min-w-[20%]">Email</th>
             <th class="min-w-[20%]">Action</th>
           </tr>
         </thead>
@@ -41,18 +39,15 @@
             <td >
              {{company.company_name}}
             </td>
-            <!-- <td>
-              {{ project.userId }}
-            </td> -->
             <td>
-              {{ company.target_region }}
+              {{ company.user.country }}
             </td>
-            <!-- <td>
-              {{ project.name }}
-            </td> -->
-            <!-- <td>
-              {{ project.email }}
-            </td> -->
+            <td>
+              {{company.user.fullName }}
+            </td>
+            <td>
+              {{ company.user.email }}
+            </td>
             <td>
               <button class="bg-[#22C55E] text-primary-foreground rounded-md px-3 py-2 text-xs font-semibold cusrsor-pointer">
                 View

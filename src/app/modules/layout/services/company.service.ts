@@ -23,6 +23,10 @@ export class CompanyService {
     return this.http.get<any>(`${this.api}/companies`);
   }
 
+  getAllCompanies(): Observable<any> {
+    return this.http.get<any>(`${this.api}/companies/projects`);
+  }
+
   updateCompany(id: any, data: company): Observable<any> {
     return this.http.put<any>(`${this.api}/companies/${id}`, data);
   }
